@@ -5,14 +5,34 @@
     <title>MQTT conection</title>
   </head>
   <body>
-    <h1 id="itsWorks"></h1>
+    <h1>Publish message</h1>
+      <form onsubmit="sendToBroker(event)">
+          <label for="form-payload">Message</label>
+          <input id="form-payload" type="text" name="payload">
+  
+          <label for="form-topics">Topic</label>
+          <input id="form-topics" type="text" name="topic">
+          <button id="add-input-topics">mais</button>
+          <input type="submit" value="submit">
+      </form>
 
     <footer>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"></script>
       <script>
+        function sendToBroker(event) {
+          event.preventDefault();
+
+          const payloadString = event.target.payload.value;
+          const topic = event.target.topic.value;
+          const message = new Paho.MQTT.Message(payloadString);
+          message.destinationName = topic;
+          client.send(message);
+          console.log("mensagem enviada");
+        }
+
         const connection = {
           host: "mqtt.internetecoisas.com.br",
-          clientId: "jJosafaj"
+          clientId: "jkJosafaj"
         };
 
         const client = new Paho.MQTT.Client(

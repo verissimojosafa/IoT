@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MQTT conection</title>
+  </head>
+  <body>
+    <h1>Subscribe topics</h1>
+    <form onsubmit="subscribeTopic(event)">
+        <label for="topic">Topic</label>
+        <input id="topic" type="text" name="topic" placeholder="e. g. topic/#">
+        <input type="submit" value="submit">
+    </form>
+
+    <footer>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"></script>
+      <script>
+          function subscribeTopic(event) {
+              event.preventDefault();
+
+              client.subscribe(event.target.topic.value);
+              console.log('topico assinado');
+          }
+        const connection = {
+          host: "mqtt.internetecoisas.com.br",
+          clientId: "jJosafaj"
+        };
+
+        const client = new Paho.MQTT.Client(
+          connection.host,
+          Number(8080),
+          connection.clientId
+        );
+
+        client.onConnectionLost = responseObject => {
+          if (responseObject.errorCode !== 0) {
+            console.log("onConnectionLost:" + responseObject.errorMessage);
+          }
+        };
+
+        client.onMessageArrived = message => {
+          console.log(message.payloadString);
+        };
+
+        client.connect({ onSuccess: onConnect, keepAliveInterval: 2 });
+        function onConnect() {
+            console.log("connected");
+        }
+      </script>
+    </footer>
+  </body>
+</html>
