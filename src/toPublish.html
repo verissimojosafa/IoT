@@ -31,13 +31,13 @@
         }
 
         const connection = {
-          host: "mqtt.internetecoisas.com.br",
+          host: "test.mosquitto.org",
           clientId: "jkJosafaj"
         };
 
         const client = new Paho.MQTT.Client(
           connection.host,
-          Number(8080),
+          Number(8081),
           connection.clientId
         );
 
@@ -47,7 +47,7 @@
           }
         };
 
-        client.connect({ onSuccess: onConnect });
+        client.connect({ onSuccess: onConnect, useSSL: true});
 
         function onConnect() {
           const message = new Paho.MQTT.Message("Josafá Veríssimo Gomes");
