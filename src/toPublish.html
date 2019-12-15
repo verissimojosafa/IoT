@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MQTT conection</title>
+  </head>
+  <body>
+    <h1 id="itsWorks"></h1>
+
+    <footer>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"></script>
+      <script>
+        const connection = {
+          host: "mqtt.internetecoisas.com.br",
+          clientId: "jJosafaj"
+        };
+
+        const client = new Paho.MQTT.Client(
+          connection.host,
+          Number(8080),
+          connection.clientId
+        );
+
+        client.onConnectionLost = responseObject => {
+          if (responseObject.errorCode !== 0) {
+            console.log("onConnectionLost:" + responseObject.errorMessage);
+          }
+        };
+
+        client.connect({ onSuccess: onConnect });
+
+        function onConnect() {
+          const message = new Paho.MQTT.Message("Josafá Veríssimo Gomes");
+          message.destinationName = "jjJosa";
+          client.send(message);
+          console.log("mensagem enviada");
+        }
+      </script>
+    </footer>
+  </body>
+</html>
