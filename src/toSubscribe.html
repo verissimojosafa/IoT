@@ -22,13 +22,13 @@
               console.log('topico assinado');
           }
         const connection = {
-          host: "mqtt.internetecoisas.com.br",
+          host: "test.mosquitto.org",
           clientId: "jJosafaj"
         };
 
         const client = new Paho.MQTT.Client(
           connection.host,
-          Number(8080),
+          Number(8081),
           connection.clientId
         );
 
@@ -42,7 +42,7 @@
           console.log(message.payloadString);
         };
 
-        client.connect({ onSuccess: onConnect, keepAliveInterval: 2 });
+        client.connect({ onSuccess: onConnect, keepAliveInterval: 2, useSSL: true });
         function onConnect() {
             console.log("connected");
         }
