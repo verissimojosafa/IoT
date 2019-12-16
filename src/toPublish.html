@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <title>MQTT conection</title>
+
+    <link rel="stylesheet" href="../public/css/normalize.css">
+    <link rel="stylesheet" href="../public/css/styles.css">
   </head>
   <body>
     <div id="connecting">
@@ -10,15 +13,20 @@
     </div>
 
     <div id="connected" hidden>
-    <h1>Publish message</h1>
-      <form onsubmit="sendMessage(event)">
-          <label for="form-payload">Message</label>
-          <input id="form-payload" type="text" name="payload">
-  
-          <label for="form-topics">Topic</label>
-          <input id="form-topics" type="text" name="topic">
-          <input type="submit" value="submit">
-      </form>
+      <header>
+        <h1>Publish message</h1>
+      </header>
+
+      <main>
+        <div class="toCenter">
+          <form onsubmit="sendMessage(event)">
+              <input id="form-payload" type="text" name="payload" placeholder="message" required>
+              <input id="form-topics" type="text" name="topic" placeholder="topic" required>
+
+              <input type="submit" value="submit">
+          </form>
+        </div>
+      </main>
     </div>
 
     <footer>
