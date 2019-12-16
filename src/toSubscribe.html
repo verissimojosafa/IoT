@@ -5,47 +5,87 @@
     <title>MQTT conection</title>
   </head>
   <body>
-    <h1>Subscribe topics</h1>
-    <form onsubmit="subscribeTopic(event)">
-        <label for="topic">Topic</label>
-        <input id="topic" type="text" name="topic" placeholder="e. g. topic/#">
-        <input type="submit" value="submit">
-    </form>
+    <div id="connecting">
+      estabelencendo conexão...
+    </div>
+
+    <div id="connected" hidden>
+    <h1>Subscribe message</h1>
+      <form onsubmit="sendTopic(event)">  
+          <label for="form-topics">Topic</label>
+          <input id="form-topics" type="text" name="topic">
+          <input type="submit" value="submit">
+      </form>
+    </div>
 
     <footer>
       <script src="../public/js/PahoMqtt.js"></script>
+      <script src="../public/js/MqttConnection.js"></script>
+      <script src="../public/js/subscriber.js"></script>
+
       <script>
-          function subscribeTopic(event) {
-              event.preventDefault();
-
-              client.subscribe(event.target.topic.value);
-              console.log('topico assinado');
-          }
-        const connection = {
-          host: "test.mosquitto.org",
-          clientId: "jJosafaj"
-        };
-
-        const client = new Paho.MQTT.Client(
-          connection.host,
-          Number(8081),
-          connection.clientId
-        );
-
-        client.onConnectionLost = responseObject => {
-          if (responseObject.errorCode !== 0) {
-            console.log("onConnectionLost:" + responseObject.errorMessage);
-          }
-        };
-
-        client.onMessageArrived = message => {
-          console.log(message.payloadString);
-        };
-
-        client.connect({ onSuccess: onConnect, keepAliveInterval: 2, useSSL: true });
-        function onConnect() {
-            console.log("connected");
+        let topic = '';
+        function connectionEstablished() {
+          document.querySelector('#connecting').remove();
+          document.querySelector('#connected').removeAttribute('hidden');
         }
+
+        function sendTopic(event) {
+          event.preventDefault();
+
+          topic = event.target.topic.value;
+
+          document.body.appendChild(createTable(`table-${topic}`, [topic], []));
+          subscribeTopic(topic);
+        }
+
+        function createTable(id = '', columns, rows) {
+          const table = document.createElement('table');
+          table.id = id
+
+          let tr = document.createElement('tr');
+          let th = document.createElement('th');
+          let td = document.createElement('td');
+
+          columns.forEach(column => {
+            th.textContent = column;
+            tr.appendChild(th);
+            th = document.createElement('th');
+          });
+          table.appendChild(tr);
+
+          rows.forEach(row => {
+            tr = document.createElement('tr');
+            row.forEach(field => {
+              td = document.createElement('td');
+              td.textContent = field;
+              tr.appendChild(td);
+            });
+            table.appendChild(tr);
+          });
+
+          return table;
+        }
+        
+        function insertInTable(tableId, row) {
+          const table = document.querySelector(`#${tableId}`);
+          const tr = document.createElement('tr');
+          let td = document.createElement('td');
+
+          row.forEach(field => {
+            td.textContent = field;
+            tr.appendChild(td);
+            td = document.createElement('td');
+          });
+
+          table.appendChild(tr);
+        }
+        
+        connection.client.onMessageArrived = message => {
+          console.log(message.payloadString);
+          insertInTable(`table-${topic}`, [message.payloadString]);
+        }
+
       </script>
     </footer>
   </body>
